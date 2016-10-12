@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 import urllib2
 
 url_root = "https://www.willhaben.at/iad/immobilien/mietwohnungen/mietwohnung-angebote"
+# id for home searches in a specific city, in this case Vienna:
 VIENNA_area_id = 900
 
 areaId = VIENNA_area_id # selects geographic search location, in this case Vienna
@@ -42,10 +43,9 @@ def is_number(s):
         return False
 
 
-
 willhaben_data = []
 #title row:
-willhaben_data.append(["id", "owner", "sq. meters", "num_rooms", "zipcode"])
+willhaben_data.append(["id", "owner", "sq. meters", "num_rooms", "zipcode", "rent"])
 
 counter = 0
 max_counter = 20
@@ -70,7 +70,7 @@ for li in soup.find_all("li", {"itemtype": "http://schema.org/Residence"}):
     # extract owner / contact (comes after the <br> in the address span)
     owner =  li.find("span", {"class": "address-lg"}).get_text().split("\n")[-3].strip()
     # add row to array: id, name, sqmeters, numrooms, rent, zip
-    new_row = [counter, owner, sqm, num_rooms, zipcode]
+    new_row = [counter, owner, sqm, num_rooms, zipcode, rent]
     willhaben_data.append(new_row)
     counter += 1
     if counter > max_counter:
